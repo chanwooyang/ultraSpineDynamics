@@ -1,19 +1,21 @@
 clear all
 clc
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 6 states per node
 % [ x y z theta phi psi ]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [theta phi psi] are the same for every node
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !! methane structure
 alpha = 109.5;    %angle b/w rods
-L = 5;         %length of rod
-% Distance on 2D projection
-l = L*sind(alpha/2);
-h = L*cosd(alpha/2);
 
 %Distance from the center of a regular tetrahedron to a node
-R = norm([l/2 h/2 0]');
+%Length of Rod
+R = 5;
+
+% Distance on 2D projection
+l = R*sind(alpha/2);
+h = R*cosd(alpha/2);
 
 t2i = [-l 0 -h]';
 t3i = [l 0 -h]';
@@ -21,6 +23,7 @@ t4i = [0 -l h]';
 t5i = [0 l h]';
 
 %Normalize these so we can multiply by R
+%Vector divided by length
 t2 = t2i/norm(t2i);
 t3 = t3i/norm(t3i);
 t4 = t4i/norm(t4i);
@@ -32,13 +35,17 @@ node2 = node1 + R*t2;
 node3 = node1 + R*t3;
 node4 = node1 + R*t4;
 node5 = node1 + R*t5;
+% *********************************************************************
+% As R = constant, it defines 'Rod Length Constraint'
+% As t2 = constant (l,h = constant), it defines 'Rod Angle Constraint' 
+% *********************************************************************
 % -----------------------------------
 
 % Segment 2 --------------------
 % Rotational Angle
 theta = 0; %about x-axis
-phi = 30;   %about y-axis
-psi = 15;  %about z-axis
+phi = 10;   %about y-axis
+psi = 0;  %about z-axis
 
 % Rotational Matrix
 Tx = [1 0 0;
