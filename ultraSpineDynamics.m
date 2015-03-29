@@ -1,9 +1,18 @@
+% @Author ChanWoo Yang
+% UC Berkeley
+% BEST Lab
+% Dynamic Tensegrity Robotics Lab
+% Intelligent Robotics Group, NASA Ames Research Center
+% Created 1/05/2015
+% Modified 3/38/2015
+% Contact ChanWoo at: chanwoo.yang@berkeley.edu
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 clear all
 clc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 6 states per node
+% 6 states per segment
 % [ x y z theta phi psi ]
-% [theta phi psi] are the same for every node
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !! methane structure
@@ -17,24 +26,24 @@ R = 5;
 l = R*sind(alpha/2);
 h = R*cosd(alpha/2);
 
-t2i = [-l 0 -h]';
-t3i = [l 0 -h]';
-t4i = [0 -l h]';
-t5i = [0 l h]';
+t2 = [-l 0 -h]';
+t3 = [l 0 -h]';
+t4 = [0 -l h]';
+t5 = [0 l h]';
 
-%Normalize these so we can multiply by R
-%Vector divided by length
-t2 = t2i/norm(t2i);
-t3 = t3i/norm(t3i);
-t4 = t4i/norm(t4i);
-t5 = t5i/norm(t5i);
+% %Normalize these so we can multiply by R
+% %Vector divided by length
+% t2 = t2i/norm(t2i);
+% t3 = t3i/norm(t3i);
+% t4 = t4i/norm(t4i);
+% t5 = t5i/norm(t5i);
 % ---------------------------------
 % Segment 1 (Fixed) ----------------------
 node1 = [0 0 0]';
-node2 = node1 + R*t2;
-node3 = node1 + R*t3;
-node4 = node1 + R*t4;
-node5 = node1 + R*t5;
+node2 = node1 + t2;
+node3 = node1 + t3;
+node4 = node1 + t4;
+node5 = node1 + t5;
 % *********************************************************************
 % As R = constant, it defines 'Rod Length Constraint'
 % As t2 = constant (l,h = constant), it defines 'Rod Angle Constraint' 
@@ -65,10 +74,10 @@ e4 = Tx*Ty*Tz*t4;
 e5 = Tx*Ty*Tz*t5;
 
 node1f = [1 1 3]';
-node2f = node1f + R*e2;
-node3f = node1f + R*e3;
-node4f = node1f + R*e4;
-node5f = node1f + R*e5;
+node2f = node1f + e2;
+node3f = node1f + e3;
+node4f = node1f + e4;
+node5f = node1f + e5;
 %------------------------------------------
 % Segment 3 -------------------------------
 % Rotational Angle
@@ -93,10 +102,10 @@ e4ff = Tx3*Ty3*Tz3*t4;
 e5ff = Tx3*Ty3*Tz3*t5;
   
 node1ff = [2 2 6]';
-node2ff = node1ff + R*e2ff;
-node3ff = node1ff + R*e3ff;
-node4ff = node1ff + R*e4ff;
-node5ff = node1ff + R*e5ff;
+node2ff = node1ff + e2ff;
+node3ff = node1ff + e3ff;
+node4ff = node1ff + e4ff;
+node5ff = node1ff + e5ff;
   
 % plotting ----------------------------------------------------------------
 plot3(node1(1),node1(2),node1(3),'*b',...
