@@ -4,9 +4,11 @@
 % Dynamic Tensegrity Robotics Lab
 % Intelligent Robotics Group, NASA Ames Research Center
 % Created 1/05/2015
-% Modified 3/38/2015
+% Modified 4/04/2015
 % Contact ChanWoo at: chanwoo.yang@berkeley.edu
+% Tensegrity Spine Dynamics: Stellated Tetrahedron Segment
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 clear all
 clc
@@ -53,8 +55,8 @@ node5 = node1 + t5;
 % Segment 2 --------------------
 % Rotational Angle
 theta = 0; %about x-axis
-phi = 10;   %about y-axis
-psi = 0;  %about z-axis
+phi = 0;   %about y-axis
+psi = 15;  %about z-axis
 
 % Rotational Matrix
 Tx = [1 0 0;
