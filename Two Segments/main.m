@@ -4,14 +4,16 @@
 % Dynamic Tensegrity Robotics Lab
 % Intelligent Robotics Group, NASA Ames Research Center
 % Created 4/03/2015
-% Modified 4/10/2015
+% Modified 4/12/2015
 % Contact ChanWoo at: chanwoo.yang@berkeley.edu
 % Tensegrity Spine Dynamics: Two Stellated Tetrahedron Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all; close all; clc;
 
-dt = 0.02;      % Time step
-yy10 = [0 0 0.6 0 0 50 0 0 0 0 0 0];    %Initial Condition
+dt = 0.02;      % Time step [sec]
+Tf = 20;        % Final Time Step [sec]
+yy10 = [0 0 0.75 40 50 60 0 0 0 0 0 0];    % Initial Condition
+                                         % close to Equlibrium at [0 0 0.75 0 0 0 0 0 0 0 0 0]
 alpha = 109.5;    % angle b/w rods [degree]
 R = 1;            % Length of Rod [m]
 % Distance on 2D projection
@@ -19,6 +21,11 @@ l = R*sind(alpha/2);
 h = R*cosd(alpha/2);
 m = 1;              % mass of node [kg]
 g = 9.81;           % gravitational acc. [m/s^2]
+
+ks = 1200;          % Saddle cable spring constant [N/m]
+kv = 1200;          % Vertical cable spring constant [N/m]
+Ls0 = 0.5;            % Saddle cable initial cable length [m] 
+Lv0 = 0.5;            % Vertical cable initial cable length [m]
 
 % Fixed first segment
 node1 = [0,0,0;
@@ -37,12 +44,9 @@ F0 = zeros(1,3);    % No force
 
 T = [0];
 Y = yy10;
-for i = 1:(11/dt)
-%     if i == 1/dt
-%         F2 = [0 0 0];
-%     end
-    options = odeset('reltol',1.e-5,'abstol',1.e-5);
-    [T1,Y1] = ode45(@(t,yy)eomSolver(t,yy,node1,l,h,m,g,F1,F2,F3,F4,F5),[0,dt],yy10,options);
+for i = 1:(Tf/dt)
+    options = odeset('reltol',1.e-10,'abstol',1.e-10);
+    [T1,Y1] = ode45(@(t,yy)eomSolver(t,yy,node1,l,h,m,g,kv,ks,Ls0,Lv0,F1,F2,F3,F4,F5),[0,dt],yy10,options);
     yy10 = Y1(end,:);                   %Update initial condition
     T = cat(1,T,T(end,:)+T1(end,:));    %Store time step
     Y = cat(1,Y,Y1(end,:));             %Store states at each time step
@@ -50,6 +54,7 @@ end
 
 node = getNodeCoord(T,Y);   % node([x,y,z],node#,timeStep)
 
+% Plot Animation
 for i = 1:length(T)
     figure(1)
     plot3(node(1,1,i),node(2,1,i),node(3,1,i),'*b',...
@@ -76,6 +81,28 @@ for i = 1:length(T)
     ylabel('Y')
     zlabel('Z')
 %     view([0,90])
+    axis([-1 1 -1 1 -1 2])
     pause(0.1)
     T(i)
 end
+
+%% Plot
+
+% Plot total energy over time step
+[totalE,ke,pe] = energyConsvChecker(node1,m,l,h,kv,ks,Ls0,Lv0,T,Y);
+figure()
+plot(T(:),totalE(:),'k',T(:),ke(:),'r',T(:),pe(:),'b')
+legend('Total Energy','Kinetic Energy','Potential Energy','Location','best')
+grid on
+
+% Plot changes in x,y,z coordinate of the center node
+figure()
+plot(T(:),Y(:,1),'r',T(:),Y(:,2),'b',T(:),Y(:,3),'k')
+legend('x1','y1','z1','Location','best')
+grid on
+
+% Plot changes in theta,phi,psi of the structure
+figure()
+plot(T(:),Y(:,4),'r',T(:),Y(:,5),'b',T(:),Y(:,6),'k')
+legend('theta','phi','psi','Location','best')
+grid on

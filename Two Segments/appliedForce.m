@@ -4,12 +4,12 @@
 % Dynamic Tensegrity Robotics Lab
 % Intelligent Robotics Group, NASA Ames Research Center
 % Created 4/03/2015
-% Modified 4/10/2015
+% Modified 4/12/2015
 % Contact ChanWoo at: chanwoo.yang@berkeley.edu
 % Tensegrity Spine Dynamics: Two Stellated Tetrahedron Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ F ] = appliedForce(node1,l,h,m,g,Fu1,Fu2,Fu3,Fu4,Fu5,x,y,z,theta,phi,psi )
+function [ F ] = appliedForce(node1,l,h,m,g,kv,ks,Ls0,Lv0,Fu1,Fu2,Fu3,Fu4,Fu5,x,y,z,theta,phi,psi)
 %INPUT:
 % node1 = Coordinates of fixed first segment
 % l = R*sind(alpha/2);
@@ -20,10 +20,6 @@ function [ F ] = appliedForce(node1,l,h,m,g,Fu1,Fu2,Fu3,Fu4,Fu5,x,y,z,theta,phi,
 % F = Force vector; 
 %     Summation of forces acting on each node respect to each state
 
-ks = 1200;          % Saddle cable spring constant [N/m]
-kv = 1200;          % Vertical cable spring constant [N/m]
-Ls0 = 0.5;            % Saddle cable initial cable length [m] 
-Lv0 = 0.5;            % Vertical cable initial cable length [m]
 
 F = zeros(6,1);
 node2 = getNodeCoord(1,[x,y,z,theta,phi,psi])';     % Coordinate of moving segment
@@ -42,14 +38,12 @@ Fs4 = kv*(signChecker(norm(node1(4,:)-node2(4,:))-Lv0))*((node1(4,:)-node2(4,:))
 Fs5 = kv*(signChecker(norm(node1(5,:)-node2(5,:))-Lv0))*((node1(5,:)-node2(5,:))/norm(node1(5,:)-node2(5,:)));
 
 
-
-
 drdx = [1 0 0]';
 drdy = [0 1 0]';
 drdz = [0 0 1]';
 dr1dtheta = [0 0 0]';
 dr2dtheta = [0,... 
-            cosd(theta)*(-h*cosd(phi)+l*cosd(psi)*sind(psi))-l*sind(psi)*sind(theta),...
+            cosd(theta)*(-h*cosd(phi)+l*cosd(psi)*sind(phi))-l*sind(psi)*sind(theta),...
             -l*cosd(theta)*sind(psi)+(h*cosd(phi)-l*cosd(psi)*sind(phi))*sind(theta)]';
 dr3dtheta = [0,...
             -cosd(theta)*(h*cosd(phi)+l*cosd(psi)*sind(phi))+l*sind(psi)*sind(theta),...
@@ -92,7 +86,7 @@ F2 = Fu2 + Fs2 + Fm;
 F3 = Fu3 + Fs3 + Fm;
 F4 = Fu4 + Fs4 + Fm;
 F5 = Fu5 + Fs5 + Fm;
-      
+
 F(1) = (F1+F2+F3+F4+F5)*drdx;
 F(2) = (F1+F2+F3+F4+F5)*drdy;
 F(3) = (F1+F2+F3+F4+F5)*drdz;

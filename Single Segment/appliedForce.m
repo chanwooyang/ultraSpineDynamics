@@ -4,7 +4,7 @@
 % Dynamic Tensegrity Robotics Lab
 % Intelligent Robotics Group, NASA Ames Research Center
 % Created 4/03/2015
-% Modified 4/04/2015
+% Modified 4/12/2015
 % Contact ChanWoo at: chanwoo.yang@berkeley.edu
 % Tensegrity Spine Dynamics: Stellated Tetrahedron Segment
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -25,7 +25,7 @@ drdy = [0 1 0]';
 drdz = [0 0 1]';
 dr1dtheta = [0 0 0]';
 dr2dtheta = [0,... 
-            cosd(theta)*(-h*cosd(phi)+l*cosd(psi)*sind(psi))-l*sind(psi)*sind(theta),...
+            cosd(theta)*(-h*cosd(phi)+l*cosd(psi)*sind(phi))-l*sind(psi)*sind(theta),...
             -l*cosd(theta)*sind(psi)+(h*cosd(phi)-l*cosd(psi)*sind(phi))*sind(theta)]';
 dr3dtheta = [0,...
             -cosd(theta)*(h*cosd(phi)+l*cosd(psi)*sind(phi))+l*sind(psi)*sind(theta),...

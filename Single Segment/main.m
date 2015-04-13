@@ -22,10 +22,10 @@ m = 1;              % mass of node [kg]
 
 % Force at each node
 F1 = [0 0 0];
-F2 = [0 30 0];
+F2 = [50 0 0];
 F3 = [0 0 0];
-F4 = [0 0 0];
-F5 = [0 0 0];
+F4 = [-25 0 0];
+F5 = [-25 0 0];
 F0 = zeros(1,3);    % No force
 
 options = odeset('reltol',1.e-5,'abstol',1.e-5);
@@ -54,7 +54,7 @@ for i = 1:length(T)
     xlabel('X')
     ylabel('Y')
     zlabel('Z')
-    view([0,90])
+    view([0,0])
     pause(0.1)
     T(i)
 end
