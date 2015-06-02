@@ -11,7 +11,7 @@
 clear all; close all; clc;
 
 dt = 0.02;      % Time step [sec]
-Tf = 5;         % Final Time Step [sec]
+Tf = 10;         % Final Time Step [sec]
                                          % close to Equlibrium at [0 0 0.75 0 0 0 0 0 0 0 0 0]
 alpha = 109.5;       % angle b/w rods [degree]
 R = 0.2;            % Length of Rod [m]
@@ -24,11 +24,12 @@ g = 9.81;                % gravitational acc. [m/s^2]
 yy10 = [0 0 0.15 0 0 20 0 0 0 0 0 0];    % Initial Condition
 
 
-c = 5;              % Cable damping coefficient [Ns/m]
+cs = 2;             % Saddle cable damping coefficient [Ns/m]
+cv = 2;             % Vertical cable damping coefficient [Ns/m]
 ks = 1220;          % Saddle cable spring constant [N/m]
 kv = 1220;          % Vertical cable spring constant [N/m]
-Ls0 = 0.1;            % Saddle cable initial cable length [m] 
-Lv0 = 0.1;            % Vertical cable initial cable length [m]
+Ls0 = 0.01;          % Saddle cable initial cable length [m] 
+Lv0 = 0.05;          % Vertical cable initial cable length [m]
 
 % Fixed first segment
 node1 = [0,0,0;
@@ -39,7 +40,7 @@ node1 = [0,0,0;
 
 
 options = odeset('reltol',1.e-10,'abstol',1.e-10);
-[T,Y] = ode45(@(t,yy)eomSolver(t,yy,node1,R,m,g,c,kv,ks,Ls0,Lv0),0:dt:Tf,yy10,options);
+[T,Y] = ode45(@(t,yy)eomSolver(t,yy,node1,R,m,g,cv,cs,kv,ks,Ls0,Lv0),0:dt:Tf,yy10,options);
 
 node = getNodeCoord(R,T,Y);   % node([x,y,z],node#,timeStep)
 

@@ -9,7 +9,7 @@
 % Tensegrity Spine Dynamics: Two Stellated Tetrahedron Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ F ] = appliedForce(node1,R,m,g,c,kv,ks,Ls0,Lv0,Fu1,Fu2,Fu3,Fu4,Fu5,yy)
+function [ F ] = appliedForce(node1,R,m,g,cv,cs,kv,ks,Ls0,Lv0,Fu1,Fu2,Fu3,Fu4,Fu5,yy)
 %INPUT:
 % node1 = Coordinates of fixed first segment
 % l = R*sind(alpha/2);
@@ -34,7 +34,7 @@ F = zeros(6,1);
 node2 = getNodeCoord(R,1,[x,y,z,theta,phi,psi])';     % Coordinate of moving segment
 
 %Gravitational Force
-Fm = [0 0 -m*g];       
+Fm = [0 0 -m*g];
 
 % Spring Forces at each node
 Fs2 = kv*(signChecker(norm(node1(2,:)-node2(2,:))-Lv0))*((node1(2,:)-node2(2,:))/norm(node1(2,:)-node2(2,:)))+...
@@ -46,13 +46,10 @@ Fs3 = kv*(signChecker(norm(node1(3,:)-node2(3,:))-Lv0))*((node1(3,:)-node2(3,:))
 Fs4 = kv*(signChecker(norm(node1(4,:)-node2(4,:))-Lv0))*((node1(4,:)-node2(4,:))/norm(node1(4,:)-node2(4,:)));
 Fs5 = kv*(signChecker(norm(node1(5,:)-node2(5,:))-Lv0))*((node1(5,:)-node2(5,:))/norm(node1(5,:)-node2(5,:)));
 
-% For no damping, comment below -------------------------------------------
-% Damping Forces at each node
+% For no damping, comment below 
+% Damping Forces at each node ---------------------------------------------
 v1 = [xd yd zd]';
-alpha = 109.5;%angle b/w rods
-% Distance on 2D projection
-l = R*sind(alpha/2);
-h = R*cosd(alpha/2);
+
 t2 = [-l 0 -h]';
 t3 = [l 0 -h]';
 t4 = [0 -l h]';
@@ -81,18 +78,27 @@ v3 = v1 + (Txd*Ty*Tz + Tx*Tyd*Tz + Tx*Ty*Tzd)*t3;
 v4 = v1 + (Txd*Ty*Tz + Tx*Tyd*Tz + Tx*Ty*Tzd)*t4;
 v5 = v1 + (Txd*Ty*Tz + Tx*Tyd*Tz + Tx*Ty*Tzd)*t5;
 
-% No Damping
-Fd2 = [0 0 0]';
-Fd3 = [0 0 0]';
-Fd4 = [0 0 0]';
-Fd5 = [0 0 0]';
+Fd2 = cv*(((0-v2)'*(node1(2,:)-node2(2,:))')/norm(node1(2,:)-node2(2,:)))*((node1(2,:)-node2(2,:))/norm(node1(2,:)-node2(2,:)))+...
+      cs*(((0-v2)'*(node1(4,:)-node2(2,:))')/norm(node1(4,:)-node2(2,:)))*((node1(4,:)-node2(2,:))/norm(node1(4,:)-node2(2,:)))+...
+      cs*(((0-v2)'*(node1(5,:)-node2(2,:))')/norm(node1(5,:)-node2(2,:)))*((node1(5,:)-node2(2,:))/norm(node1(5,:)-node2(2,:)));
+Fd3 = cv*(((0-v3)'*(node1(3,:)-node2(3,:))')/norm(node1(3,:)-node2(3,:)))*((node1(3,:)-node2(3,:))/norm(node1(3,:)-node2(3,:)))+...
+      cs*(((0-v3)'*(node1(4,:)-node2(3,:))')/norm(node1(4,:)-node2(3,:)))*((node1(4,:)-node2(3,:))/norm(node1(4,:)-node2(3,:)))+...
+      cs*(((0-v3)'*(node1(5,:)-node2(3,:))')/norm(node1(5,:)-node2(3,:)))*((node1(5,:)-node2(3,:))/norm(node1(5,:)-node2(3,:)));
+Fd4 = cv*(((0-v4)'*(node1(4,:)-node2(4,:))')/norm(node1(4,:)-node2(4,:)))*((node1(4,:)-node2(4,:))/norm(node1(4,:)-node2(4,:)));
+Fd5 = cv*(((0-v5)'*(node1(5,:)-node2(5,:))')/norm(node1(5,:)-node2(5,:)))*((node1(5,:)-node2(5,:))/norm(node1(5,:)-node2(5,:)));
+
+%No Damping
+% Fd2 = [0 0 0]';
+% Fd3 = [0 0 0]';
+% Fd4 = [0 0 0]';
+% Fd5 = [0 0 0]';
 % -----------------------------------------------
 
 F1 = Fu1 + Fm;
-F2 = Fu2 + Fs2 + Fm + Fd2';
-F3 = Fu3 + Fs3 + Fm + Fd3';
-F4 = Fu4 + Fs4 + Fm + Fd4';
-F5 = Fu5 + Fs5 + Fm + Fd5';
+F2 = Fu2 + Fs2 + Fm + Fd2;
+F3 = Fu3 + Fs3 + Fm + Fd3;
+F4 = Fu4 + Fs4 + Fm + Fd4;
+F5 = Fu5 + Fs5 + Fm + Fd5;
 
 % ------------------------------------------------
 drdx = [1 0 0]';

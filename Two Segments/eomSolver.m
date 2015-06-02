@@ -9,7 +9,7 @@
 % Tensegrity Spine Dynamics: Two Stellated Tetrahedron Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function dqdt = eomSolver(t,yy,node1,R,m,g,c,kv,ks,Ls0,Lv0)
+function dqdt = eomSolver(t,yy,node1,R,m,g,cv,cs,kv,ks,Ls0,Lv0)
 %INPUT: yy = 12 states
 %OUTPUT:
     
@@ -33,7 +33,7 @@ function dqdt = eomSolver(t,yy,node1,R,m,g,c,kv,ks,Ls0,Lv0)
 %     fprintf('%f\n',z);
     
     dqdt = zeros(12,1);
-    F = appliedForce(node1,R,m,g,c,kv,ks,Ls0,Lv0,F1,F2,F3,F4,F5,yy);
+    F = appliedForce(node1,R,m,g,cv,cs,kv,ks,Ls0,Lv0,F1,F2,F3,F4,F5,yy);
     
     dqdt(1:6) = [xd,yd,zd,thetad,phid,psid]';
     dqdt(7:12) = [F(1)/(5*m),F(2)/(5*m),F(3)/(5*m),...
