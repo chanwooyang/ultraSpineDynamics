@@ -4,22 +4,17 @@
 % Dynamic Tensegrity Robotics Lab
 % Intelligent Robotics Group, NASA Ames Research Center
 % Created 4/03/2015
-% Modified 4/10/2015
+% Modified 6/01/2015
 % Contact ChanWoo at: chanwoo.yang@berkeley.edu
 % Tensegrity Spine Dynamics: Two Stellated Tetrahedron Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function r = getNodeCoord(T,Y)
+function r = getNodeCoord(R,T,Y)
 
 r = zeros(3,5,length(T));
 % r([x,y,z],node#,timeStep)
 
-alpha = 109.5;    %angle b/w rods
-
-%Distance from the center of a regular tetrahedron to a node
-%Length of Rod
-R = 1;
-
+alpha = 109.5;       %angle b/w rods
 % Distance on 2D projection
 l = R*sind(alpha/2);
 h = R*cosd(alpha/2);
