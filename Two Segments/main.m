@@ -4,14 +4,14 @@
 % Dynamic Tensegrity Robotics Lab
 % Intelligent Robotics Group, NASA Ames Research Center
 % Created 4/03/2015
-% Modified 6/01/2015
+% Modified 6/02/2015
 % Contact ChanWoo at: chanwoo.yang@berkeley.edu
 % Tensegrity Spine Dynamics: Two Stellated Tetrahedron Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all; close all; clc;
 
 dt = 0.02;      % Time step [sec]
-Tf = 10;         % Final Time Step [sec]
+Tf = 30;         % Final Time Step [sec]
                                          % close to Equlibrium at [0 0 0.75 0 0 0 0 0 0 0 0 0]
 alpha = 109.5;       % angle b/w rods [degree]
 R = 0.2;            % Length of Rod [m]
@@ -21,15 +21,15 @@ h = R*cosd(alpha/2);
 m = 0.3;              % mass of node [kg]
 g = 9.81;                % gravitational acc. [m/s^2]
 
-yy10 = [0 0 0.15 0 0 20 0 0 0 0 0 0];    % Initial Condition
+yy10 = [0 0.1 0.15 0 20 30 0 0 0 0 0 0];    % Initial Condition
 
 
-cs = 2;             % Saddle cable damping coefficient [Ns/m]
-cv = 2;             % Vertical cable damping coefficient [Ns/m]
+cs = 10;             % Saddle cable damping coefficient [Ns/m]
+cv = 10;             % Vertical cable damping coefficient [Ns/m]
 ks = 1220;          % Saddle cable spring constant [N/m]
 kv = 1220;          % Vertical cable spring constant [N/m]
-Ls0 = 0.01;          % Saddle cable initial cable length [m] 
-Lv0 = 0.05;          % Vertical cable initial cable length [m]
+Ls0 = 0.05;          % Saddle cable initial cable length [m] 
+Lv0 = 0.01;          % Vertical cable initial cable length [m]
 
 % Fixed first segment
 node1 = [0,0,0;
@@ -85,12 +85,12 @@ for i = 1:length(T)
     ylabel('Y')
     zlabel('Z')
 %     view([0,90])
-    axis([-0.3 0.5 -0.3 0.5 -0.3 0.5])
+    axis([-0.3 0.3 -0.3 0.3 -0.3 0.3])
     
     % Uncomment to save a video
 %     M(i) = getframe(gcf);
     
-    pause(0.05)
+    pause(0.001)
     T(i)
 end
 
@@ -149,18 +149,18 @@ xlabel('Simulation Timestep [sec]','FontSize',14)
 ylabel('Angle [deg]','FontSize',14)
 grid on
 
-%Saddle Cables z-direction Force
-figure()
-plot(T(:),Fs24(3,:),'*-k',T(:),Fs25(3,:),'<r',T(:),Fs34(3,:),'^b',T(:),Fs35(3,:),'g')
-legend('Saddle 22-14','Saddle 22-15','Saddle 23-14','Saddle 23-15','Location','best')
-xlabel('Simulation Timestep [sec]','FontSize',14)
-ylabel('Force [N]','FontSize',14)
-grid on
-
-%Vertical Cables z-direction Force
-figure()
-plot(T(:),Fv22(3,:),'*-k',T(:),Fv33(3,:),'<r',T(:),Fv44(3,:),'^b',T(:),Fv55(3,:),'g')
-legend('Vertical 12-22','Vertical 13-23','Vertical 14-24','Saddle 15-25','Location','best')
-xlabel('Simulation Timestep [sec]','FontSize',14)
-ylabel('Force [N]','FontSize',14)
-grid on
+% %Saddle Cables z-direction Force
+% figure()
+% plot(T(:),Fs24(3,:),'*-k',T(:),Fs25(3,:),'<r',T(:),Fs34(3,:),'^b',T(:),Fs35(3,:),'g')
+% legend('Saddle 22-14','Saddle 22-15','Saddle 23-14','Saddle 23-15','Location','best')
+% xlabel('Simulation Timestep [sec]','FontSize',14)
+% ylabel('Force [N]','FontSize',14)
+% grid on
+% 
+% %Vertical Cables z-direction Force
+% figure()
+% plot(T(:),Fv22(3,:),'*-k',T(:),Fv33(3,:),'<r',T(:),Fv44(3,:),'^b',T(:),Fv55(3,:),'g')
+% legend('Vertical 12-22','Vertical 13-23','Vertical 14-24','Saddle 15-25','Location','best')
+% xlabel('Simulation Timestep [sec]','FontSize',14)
+% ylabel('Force [N]','FontSize',14)
+% grid on
