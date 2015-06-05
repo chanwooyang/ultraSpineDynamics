@@ -4,7 +4,7 @@
 % Dynamic Tensegrity Robotics Lab
 % Intelligent Robotics Group, NASA Ames Research Center
 % Created 4/03/2015
-% Modified 6/01/2015
+% Modified 6/04/2015
 % Contact ChanWoo at: chanwoo.yang@berkeley.edu
 % Tensegrity Spine Dynamics: Two Stellated Tetrahedron Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,6 +78,7 @@ v3 = v1 + (Txd*Ty*Tz + Tx*Tyd*Tz + Tx*Ty*Tzd)*t3;
 v4 = v1 + (Txd*Ty*Tz + Tx*Tyd*Tz + Tx*Ty*Tzd)*t4;
 v5 = v1 + (Txd*Ty*Tz + Tx*Tyd*Tz + Tx*Ty*Tzd)*t5;
 
+%With Damping
 Fd2 = cv*(((0-v2)'*(node1(2,:)-node2(2,:))')/norm(node1(2,:)-node2(2,:)))*((node1(2,:)-node2(2,:))/norm(node1(2,:)-node2(2,:)))+...
       cs*(((0-v2)'*(node1(4,:)-node2(2,:))')/norm(node1(4,:)-node2(2,:)))*((node1(4,:)-node2(2,:))/norm(node1(4,:)-node2(2,:)))+...
       cs*(((0-v2)'*(node1(5,:)-node2(2,:))')/norm(node1(5,:)-node2(2,:)))*((node1(5,:)-node2(2,:))/norm(node1(5,:)-node2(2,:)));
@@ -88,10 +89,10 @@ Fd4 = cv*(((0-v4)'*(node1(4,:)-node2(4,:))')/norm(node1(4,:)-node2(4,:)))*((node
 Fd5 = cv*(((0-v5)'*(node1(5,:)-node2(5,:))')/norm(node1(5,:)-node2(5,:)))*((node1(5,:)-node2(5,:))/norm(node1(5,:)-node2(5,:)));
 
 %No Damping
-% Fd2 = [0 0 0]';
-% Fd3 = [0 0 0]';
-% Fd4 = [0 0 0]';
-% Fd5 = [0 0 0]';
+% Fd2 = [0 0 0];
+% Fd3 = [0 0 0];
+% Fd4 = [0 0 0];
+% Fd5 = [0 0 0];
 % -----------------------------------------------
 
 F1 = Fu1 + Fm;
