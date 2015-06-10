@@ -4,7 +4,7 @@
 % Dynamic Tensegrity Robotics Lab
 % Intelligent Robotics Group, NASA Ames Research Center
 % Created 4/03/2015
-% Modified 6/04/2015
+% Modified 6/09/2015
 % Contact ChanWoo at: chanwoo.yang@berkeley.edu
 % Tensegrity Spine Dynamics: Two Stellated Tetrahedron Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -21,7 +21,7 @@ h = R*cosd(alpha/2);
 m = 0.3;              % mass of node [kg]
 g = 9.81;                % gravitational acc. [m/s^2]
 
-yy10 = [0.2 0.5 0.15 0 0 30 0 0 0 0 0 0];    % Initial Condition
+yy10 = [0 0 0.15 20 0 30 0 0 0 0 0 0];    % Initial Condition
 
 
 cs = 10;             % Saddle cable damping coefficient [Ns/m]
@@ -90,7 +90,7 @@ for i = 1:length(T)
     % Uncomment to save a video
 %     M(i) = getframe(gcf);
     
-    pause(0.0001)
+    pause(0.001)
     T(i)
 end
 
@@ -100,15 +100,30 @@ end
 % writeVideo(videoObject,M);
 % close(videoObject);
 
-%% Plot
+%% Compute engineering parameters
 
-% Plot each spring force
+% Compute Angular Momentum
+for i = 1:length(T)
+r2(:,i) = node(:,2,i)-node(:,1,i);
+r3(:,i) = node(:,3,i)-node(:,1,i);
+r4(:,i) = node(:,4,i)-node(:,1,i);
+r5(:,i) = node(:,5,i)-node(:,1,i);
+% MoI(:,:,i) = m*r2(:,i)*r2(:,i)'+m*r3(:,i)*r3(:,i)'+...
+%              m*r4(:,i)*r4(:,i)'+m*r5(:,i)*r5(:,i)';  %Moment of Inertia
+% AM(:,i) = MoI(:,:,i)*Y(i,10:12)';
+AM(:,i) = m*r2(:,i)*r2(:,i)'*Y(i,10:12)'+m*r3(:,i)*r3(:,i)'*Y(i,10:12)'+...
+          m*r4(:,i)*r4(:,i)'*Y(i,10:12)'+m*r5(:,i)*r5(:,i)'*Y(i,10:12)';
+end
+
+% Compute spring forces
 [Fv22,Fv33,Fv44,Fv55,Fs24,Fs25,Fs34,Fs35] = springForceChecker(node1,R,kv,ks,Ls0,Lv0,T,Y);
 for i=1:length(T)
     Fv22Mag(i) = norm(Fv22(:,i)); 
     Fv33Mag(i) = norm(Fv33(:,i)); Fv44Mag(i) = norm(Fv44(:,i)); Fv55Mag(i) = norm(Fv55(:,i));
     Fs24Mag(i) = norm(Fs24(:,i)); Fs25Mag(i) = norm(Fs25(:,i)); Fs34Mag(i) = norm(Fs34(:,i)); Fs35Mag(i) = norm(Fs35(:,i));
 end
+
+%% Plot
 %Vertical Cables
 figure()
 plot(T(:),Fv22Mag(:),'*k',T(:),Fv33Mag(:),'<r',T(:),Fv44Mag(:),'^b',T(:),Fv55Mag(:),'g')
@@ -147,6 +162,14 @@ plot(T(:),Y(:,4),'r',T(:),Y(:,5),'b',T(:),Y(:,6),'k')
 legend('theta','phi','psi','Location','best')
 xlabel('Simulation Timestep [sec]','FontSize',14)
 ylabel('Angle [deg]','FontSize',14)
+grid on
+
+% Plot Angular Momentum
+figure()
+plot(T(:),AM(1,:),'r',T(:),AM(2,:),'b',T(:),AM(3,:),'k')
+legend('theta','phi','psi','Location','best')
+xlabel('Simulation Timestep [sec]','FontSize',14)
+ylabel('Angular Momentum','FontSize',14)
 grid on
 
 % %Saddle Cables z-direction Force
